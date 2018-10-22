@@ -1,0 +1,13 @@
+---
+# tasks file for ait.phusion.samba-mount
+
+
+- name: Install cifs for smb mounts
+  apt:
+    name: cifs-utils
+
+- name: Add samba mount script to my_init.d
+  copy:
+    src:  samba.py
+    dest: /etc/my_init.d/999_samba.py
+    mode: 0744
