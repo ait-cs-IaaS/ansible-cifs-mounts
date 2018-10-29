@@ -1,7 +1,7 @@
 galaxy_info:
-  author: your name
-  description: your description
-  company: your company (optional)
+  author: Maximilian Frank
+  description: Installs samba utils and adds phusion startup script to mount shares configured in a envrionment variable.
+  company: Austrian Institute of Technology
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
