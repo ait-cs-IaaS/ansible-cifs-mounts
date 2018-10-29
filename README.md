@@ -1,38 +1,38 @@
-Role Name
-=========
+# ait.phusion.samba-mount
 
-A brief description of the role goes here.
+Installs samba utils and adds phusion startup script to mount shares configured in a envrionment variable.
+## Requirements
 
-Requirements
-------------
+Requires the init process provided by the [phusion/baseimage](https://hub.docker.com/r/phusion/baseimage/).
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Role Variables
 
-Role Variables
---------------
+Variables available as per cyberrange base client docker image:
+- `default_user`: ubuntu  
+   The default user made available by the baseimage
+- `user`: ubuntu  
+   The user to be used
+- `img_home`: "/opt/unity-vnc"  
+   Directory containing script and config file specific to the cyberrange base image
+- `img_templates`: "/opt/unity-vnc/templates"  
+   Directory that should be used to store templates, which are rendered on startup
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Environment Variables
 
-Dependencies
-------------
+- `SMB_SHARE_JSON`
+    A list of dictionaries containing samba configurations. The following keys must be present:
+    - `share`
+        Remote samba share which should be mounted.
+    - `local`
+        The local directory the share should be mounted to.
+    - `options`
+        Options with which to run the mount.cifs command. Using this you can configure cerdentials etc.  
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
-
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+    Example:
+    ```json
+    [{
+          "share": "//example.com/share",
+          "local": "/mnt/share",
+          "options": "user=example,password=example,uid=example,gid=example"
+    }]
+    ```
