@@ -1,5 +1,21 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: "{{ test_host | default('localhost') }}"
   roles:
-    - ait.phusion.samba-mount
+    - role: cifs-mounts
+      vars:
+        cifs_mounts:
+          - path: /mnt/test
+            cifs_path: //example/test
+            opts:
+            - username=test
+            - password=test
+            state: present
+          - path: /mnt/test2
+            cifs_path: //example/test2
+            credentials:
+              username: test2
+              password: test2
+              path: /home/test/cifs.credentials
+            state: present
+            
+

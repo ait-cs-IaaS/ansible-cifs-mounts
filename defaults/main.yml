@@ -1,2 +1,5 @@
 ---
-# defaults file for ait.phusion.samba-mount
+# defaults file for cifs-mounts
+
+cifs_default_state: present
+cifs_mounts: []

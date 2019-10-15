@@ -1,2 +1,5 @@
 ---
-# vars file for ait.phusion.samba-mount
+# vars file for cifs-mounts
+cifs_packages:
+    - cifs-utils
+    - smbclient

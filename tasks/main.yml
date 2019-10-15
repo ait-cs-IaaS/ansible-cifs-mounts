@@ -1,13 +1,52 @@
 ---
-# tasks file for ait.phusion.samba-mount
+# tasks file for cifs-mounts
 
 
-- name: Install cifs for smb mounts
+- name: Install cifs util packages
   apt:
-    name: cifs-utils
+    name: "{{ cifs_packages }}"
+    state: present
+  become: yes
+  tags: [install]
 
-- name: Add samba mount script to my_init.d
+- name: Create credential file
   copy:
-    src:  samba.py
-    dest: /etc/my_init.d/999_samba.py
-    mode: 0744
+      dest: "{{ item.credentials.path }}" 
+      content: |
+        username={{ item.credentials.username }}
+        password={{ item.credentials.password }}
+        {% if item.credentials.domain is defined %}
+        domain={{ item.credentials.domain|upper }}
+        {% endif %}
+      owner: "{{ item.credentials.owner | default(omit) }}"
+      mode: "{{ item.credentials.mode | default('0600', true)}} "
+  become: yes
+  when: item.credentials is defined and item.credentials.username is defined and item.credentials.password is defined and item.credentials.path is defined and item.credentials.src is not defined
+  loop: "{{ cifs_mounts }}"
+  tags: [config]
+
+
+- name: Transfer credential file to host
+  copy:
+      dest: "{{ item.credentials.path }}"
+      src: "{{ item.credentials.src }}"
+      owner: "{{ item.credentials.owner | default(omit) }}"
+      mode: "{{ item.credentials.mode | default('0600', true)}} "
+  become: yes
+  when: item.credentials is defined and item.credentials.src is defined and item.credentials.path is defined
+  loop: "{{ cifs_mounts }}"
+  tags: [config]
+    
+
+- name: Configure mounts on system
+  mount:
+    fstype: cifs
+    name: "{{ item.path }}"
+    src: "{{ item.cifs_path }}"
+    opts: "{{ (['credentials='+item.credentials.path] + (item.opts|default([], true)) if item.credentials is defined and item.credentials.path else item.opts|default([], true)) | join(',') }}"
+    dump: "{{ item.dump | default(omit) }}"
+    passno: "{{ item.passno | default(omit) }}"
+    state: "{{ item.state | default(cifs_default_state, true)}}"
+  become: yes
+  loop: "{{ cifs_mounts }}"
+  tags: [config]
