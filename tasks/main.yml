@@ -4,10 +4,20 @@
 
 - name: Install cifs util packages
   apt:
-    name: "{{ cifs_packages }}"
-    state: present
+      name: "{{ cifs_packages }}"
+      state: present
   become: yes
   tags: [install]
+
+- name: Ensure directory for credential file exists
+  file:
+    path: "{{ item.credentials.path | dirname }}" 
+    state: directory 
+    owner: "{{ item.credentials.owner | default(omit) }}"
+  become: yes
+  when: item.credentials is defined and item.credentials.path is defined
+  loop: "{{ cifs_mounts }}"
+  tags: [config, dir]
 
 - name: Create credential file
   copy:
