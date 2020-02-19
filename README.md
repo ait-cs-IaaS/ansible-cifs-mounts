@@ -22,6 +22,7 @@ Installs samba mount utils and configures cifs mounts.
 | &nbsp;&nbsp;∟.credentials.mode     | string            | 0600                      | The file permissions, if the credentials file should be created (optional)                                                                           |
 | &nbsp;&nbsp;∟.credentials.path     | file path         |                           | The destination path, if the credentials file is to be copied or created on the ansible host. Also used for the credentials option.                  |
 | &nbsp;&nbsp;∟.credentials.src      | file path         |                           | The source path, if the credentials file is to be copied to the ansible host                                                                         |
+
 ***Note that the `credentials` option can be set through the `.credentials` variable if the credentials file should be automatically created or copied to the host.**
 
 ## Examples
