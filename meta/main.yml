@@ -1,15 +1,11 @@
 galaxy_info:
+  role_name: cifs-mounts
   author: Maximilian Frank
   description: Installs samba utils and adds phusion startup script to mount shares configured in a envrionment variable.
   company: Austrian Institute of Technology
 
-
-  license: GPL-3.0 (GPLv2, CC-BY, etc)
-
-  min_ansible_version: 2.4
-
-
-
+  license: GPL-3.0
+  min_ansible_version: 2.9
 
   galaxy_tags: []
 
